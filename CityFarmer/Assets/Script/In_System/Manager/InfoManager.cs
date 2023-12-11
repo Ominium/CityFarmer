@@ -278,6 +278,7 @@ public class InfoManager : MonoBehaviour
 
                 UserInfo.UserSeq = System.Convert.ToInt32(node.SelectSingleNode("USER_SEQ").InnerText);
                 UserInfo.UserLevel = System.Convert.ToInt32(node.SelectSingleNode("USER_LEVEL").InnerText);
+                UserInfo.UserLandLevel = System.Convert.ToInt32(node.SelectSingleNode("USER_LANDLEVEL").InnerText);
                 UserInfo.UserId = node.SelectSingleNode("USER_ID").InnerText;
                 UserInfo.UserName = node.SelectSingleNode("USER_NAME").InnerText;
                 UserInfo.UserReg = node.SelectSingleNode("USER_REG").InnerText;

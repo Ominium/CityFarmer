@@ -15,7 +15,7 @@ public class Shop_UI : MonoBehaviour
     {
         
     }
-    public void CreateButton(List<Shop> shops, Transform parent)
+    public void CreateItemButton(List<Shop> shops, Transform parent)
     {
         for(int shopIndex = 0; shopIndex <shops.Count; shopIndex++)
         {

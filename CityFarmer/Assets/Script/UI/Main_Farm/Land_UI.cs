@@ -23,7 +23,7 @@ public class Land_UI : MonoBehaviour
             ProgressTime(nodeIndex);
         }
     }
-    public GameObject CreateTimerText(Vector3 timerpos, string time)
+    private GameObject CreateTimerText(Vector3 timerpos, string time)
     {
         GameObject timerText = Instantiate(Timer,timerpos,Quaternion.identity);
         timerText.transform.parent = transform;
@@ -32,14 +32,24 @@ public class Land_UI : MonoBehaviour
         timerText.GetComponent<TextMeshProUGUI>().text = time;
         return timerText;
     }
-    private void CreateTimer()
+    public void CreateTimer()
     {
+        ResetTimer();
         for (int timerIndex = 0; timerIndex < Land.NodeList.Count; timerIndex++)
         {
             _timers.Add(CreateTimerText(Land.NodeList[timerIndex].GetPosition(), Land.ConvertString(Land.NodeList[timerIndex].GetTimer())));
             float time = Land.NodeList[timerIndex].GetTimer();
             _deltaTime.Add(time);
         }
+    }
+    public void ResetTimer()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Destroy(transform.GetChild(i).gameObject);
+        }
+        _timers.Clear();
+        _deltaTime.Clear();
     }
     private void ProgressTime(int nodeIndex)
     {

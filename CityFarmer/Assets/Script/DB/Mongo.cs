@@ -72,14 +72,29 @@ public class Mongo : MonoBehaviour
         string typetext = type.GetType().ToString();
         IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>(typetext);
         var filter = Builders<BsonDocument>.Filter.Eq("UserSeq", UserInfo.UserSeq);
-
+        
         switch (typetext)
         {
             case "Inventory":
-                var InventoryItemupdate = Builders<BsonDocument>.Update.Set("ItemSeqs", inventory.ItemSeqs);
-                var InventoryFoodupdate = Builders<BsonDocument>.Update.Set("FoodSeqs", inventory.FoodSeqs);
-                var InventoryItemValueupdate = Builders<BsonDocument>.Update.Set("ItemValues", inventory.ItemValues);
-                var InventoryFoodValueupdate = Builders<BsonDocument>.Update.Set("FoodValues", inventory.FoodValues);
+                List<int> itemSeqs = new();
+                List<int> itemValues = new();
+                List<int> foodSeqs = new();
+                List<int> foodValues = new();
+                for (int i = 0; i < GameManager.InventoryManager.PlayerItemList.Count; i++)
+                {
+                    itemSeqs.Add(GameManager.InventoryManager.PlayerItemList[i].ItemSeq);
+                    itemValues.Add(GameManager.InventoryManager.PlayerItemList[i].ItemValue);
+                }
+                for (int i = 0; i < GameManager.InventoryManager.PlayerFoodList.Count; i++)
+                {
+                    foodSeqs.Add(GameManager.InventoryManager.PlayerFoodList[i].FoodSeq);
+                    foodValues.Add(GameManager.InventoryManager.PlayerFoodList[i].FoodValue);
+                }
+
+                var InventoryItemupdate = Builders<BsonDocument>.Update.Set("ItemSeqs", itemSeqs);
+                var InventoryFoodupdate = Builders<BsonDocument>.Update.Set("FoodSeqs", foodSeqs);
+                var InventoryItemValueupdate = Builders<BsonDocument>.Update.Set("ItemValues", itemValues);
+                var InventoryFoodValueupdate = Builders<BsonDocument>.Update.Set("FoodValues", foodValues);
                 // 데이터 저장
                 var inventoryItemResult = collection.UpdateOne(filter, InventoryItemupdate);
                 var inventoryFoodResult = collection.UpdateOne(filter, InventoryFoodupdate);
