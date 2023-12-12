@@ -8,10 +8,8 @@ public class InventoryManager : MonoBehaviour
     private Inventory _inventory;
     private Mongo _mongoDB;
 
-    public List<Item> PlayerItemList;
-    public List<int> PlayerItemValueList { get; set; }
+    public List<Item> PlayerItemList { get; set; }
     public List<Food> PlayerFoodList { get; set; }
-    public List<int> PlayerFoodValueList { get; set; }
 
     public void Init()
     {

@@ -15,16 +15,18 @@ public class Money_UI : MonoBehaviour
     private void Awake()
     {   
         InitGoods();
+        
     }
     
-    private void Start()
+    private void OnEnable()
     {
-        _money = InfoManager.Instance.Money;
-        UpdateGold();
+        
+        UpdateMoney();
     }
     
-    public void UpdateGold()
+    public void UpdateMoney()
     {
+        
         _goldText.text = _money.moneyGold.ToString();
         _rubyText.text = _money.moneyRuby.ToString();
     }
@@ -33,5 +35,6 @@ public class Money_UI : MonoBehaviour
     {
         _goldText = transform.GetChild(_goldIndex).GetChild(0).GetComponent<TextMeshProUGUI>();
         _rubyText = transform.GetChild(_rubyIndex).GetChild(0).GetComponent<TextMeshProUGUI>();
+        _money = InfoManager.Instance.Money;
     }
 }

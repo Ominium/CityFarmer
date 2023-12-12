@@ -7,15 +7,9 @@ public class Shop_UI : MonoBehaviour
 {
     public ShopManager ShopManager;
     public GameObject ShopButtonPrefab;
-    private bool _heightbool = false;
-    private bool _weightbool = false;
     private int _height = 0;
     private int _weight = 0;
-    private void Start()
-    {
-        
-    }
-    public void CreateButton(List<Shop> shops, Transform parent)
+    public void CreateItemButton(List<Shop> shops, Transform parent)
     {
         for(int shopIndex = 0; shopIndex <shops.Count; shopIndex++)
         {

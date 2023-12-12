@@ -7,7 +7,6 @@ public class Node_UI : MonoBehaviour
 {
 
     public LandManager LandManager;
-    private int _nodeLength;
     private List<Transform> _transforms;
     private float[] _deltaTime = new float[9];
 
@@ -15,7 +14,6 @@ public class Node_UI : MonoBehaviour
     private void OnEnable()
     {
 
-        _nodeLength = LandManager.NodeList.Count;
         _transforms = new List<Transform>();
         for (int childIndex = 0; childIndex < transform.childCount; childIndex++)
         {
@@ -27,7 +25,7 @@ public class Node_UI : MonoBehaviour
     public void ShowButton(int LandSeq)
     {
 
-        for (int nodeIndex = 0; nodeIndex < _nodeLength; nodeIndex++)
+        for (int nodeIndex = 0; nodeIndex < 9; nodeIndex++)
         {
             Node node = LandManager.NodeList[LandSeq * 9 + nodeIndex];
             int foodSeq = node.GetFoodSeq();

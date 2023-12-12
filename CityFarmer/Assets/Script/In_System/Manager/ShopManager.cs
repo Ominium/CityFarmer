@@ -3,8 +3,23 @@ using UnityEngine;
 public class ShopManager : MonoBehaviour
 {
 
-    public InventoryManager Inventory;
-    public LandManager Land;
+    private InventoryManager _inventory;
+    public LandManager LandManager;
+    private Money_UI _money_UI;
+
+    private void Awake()
+    {
+        _inventory = GameManager.InventoryManager;
+        _money_UI = transform.Find("GoodsPopUp").GetComponent<Money_UI>();
+    }
+    private void OnEnable()
+    {
+        LandManager.OnNodePopUp = false;
+    }
+    private void OnDisable()
+    {
+        LandManager.OnNodePopUp = true;
+    }
     public void ClickBuyButton(int shopSeq)
     {
         Shop shop = InfoManager.Instance.FindBySeq(InfoManager.Instance.Shops, shopSeq);
@@ -32,12 +47,8 @@ public class ShopManager : MonoBehaviour
                 Debug.Log("금액이 부족합니다.");
             }
         }
-        
-          
-        
-          
-        
-      
+        _money_UI.UpdateMoney();
+
     }
     private void ShopTypeCheck(Shop shop)
     {
@@ -51,8 +62,8 @@ public class ShopManager : MonoBehaviour
     }
     public void SellFood(int foodSeq, int value)
     {
-        Food food = Inventory.PlayerFoodList.Find(x => x.FoodSeq == foodSeq);
-        int foodIndex = Inventory.PlayerFoodList.FindIndex(x => x.FoodSeq == foodSeq);
+        Food food = _inventory.PlayerFoodList.Find(x => x.FoodSeq == foodSeq);
+        int foodIndex = _inventory.PlayerFoodList.FindIndex(x => x.FoodSeq == foodSeq);
         for (int i = 0; i < value; i++)
         {
             InfoManager.Instance.Money.moneyGold += food.FoodPrice;
@@ -61,22 +72,23 @@ public class ShopManager : MonoBehaviour
         if(food.FoodValue > value)
         {
             food.FoodValue -= value;
-            Inventory.PlayerFoodList[foodIndex] = food;
+            _inventory.PlayerFoodList[foodIndex] = food;
         }
         else
         {
-            Inventory.PlayerFoodList.RemoveAt(foodIndex);
+            _inventory.PlayerFoodList.RemoveAt(foodIndex);
         }
-       
-       
 
+        _inventory.SaveInventory();
+        InfoManager.Instance.UpdateSQL(InfoManager.Instance.MoneyUpdateString());
         InfoManager.Instance.UpdateSQL(InfoManager.Instance.UserUpdateString());
+        _money_UI.UpdateMoney();
     }
     public void BuyItem(Shop shop)
     {
         UseMoney(shop);
-        Item item = Inventory.PlayerItemList.Find(x => x.ItemSeq == shop.ItemSeq);
-        int itemIndex = Inventory.PlayerItemList.FindIndex(x => x.ItemSeq == shop.ItemSeq);
+        Item item = _inventory.PlayerItemList.Find(x => x.ItemSeq == shop.ItemSeq);
+        int itemIndex = _inventory.PlayerItemList.FindIndex(x => x.ItemSeq == shop.ItemSeq);
         if (item == null)
         {
             item = InfoManager.Instance.FindBySeq(InfoManager.Instance.Items, shop.ItemSeq);
@@ -85,10 +97,10 @@ public class ShopManager : MonoBehaviour
         else
         {
             item.ItemValue += shop.ShopValue;
-            Inventory.PlayerItemList.RemoveAt(itemIndex);
+            _inventory.PlayerItemList.RemoveAt(itemIndex);
         }
-        Inventory.PlayerItemList.Add(item);
-
+        _inventory.PlayerItemList.Add(item);
+        _inventory.SaveInventory();
 
     }
     public void BuyMoney(Shop shop)
@@ -112,7 +124,8 @@ public class ShopManager : MonoBehaviour
         Mongo.InitMongoNodes();
         InfoManager.Instance.UpdateSQL(InfoManager.Instance.MoneyUpdateString());
         InfoManager.Instance.UpdateSQL(InfoManager.Instance.UserUpdateString());
-        Land.LoadLand();
+        LandManager.Init();
+        LandManager.LoadLand();
     }
     public void UseMoney(Shop shop)
     {

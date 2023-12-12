@@ -10,24 +10,31 @@ public class LandManager : MonoBehaviour
 {
     public Tilemap Tilemap;
     public Grid grid;
-    public List<Vector3Int> Vector3MinPostion;
-    public List<Vector3Int> Vector3MaxPostion;
+    public List<Vector3Int> Vector3MinPostion = new();
+    public List<Vector3Int> Vector3MaxPostion = new();
     public Dictionary<Vector3Int, int> Vector3Node = new Dictionary<Vector3Int, int>();
     public List<Node> NodeList;
   
-    public List<Nodes> NodesList = new List<Nodes>();
+    public List<Nodes> NodesList = new();
     public Nodes ClickNodes;
     private Mongo _mongoDB;
     public int LandSeq;
     public GameObject _nodePopUp;
     public bool OnNodePopUp = true;
+
     private void Awake()
     {
+        Init();
+    }
+    public void Init()
+    {
         GameObject _gameObject = InfoManager.Instance.gameObject;
-        
+
         _mongoDB = _gameObject.GetComponent<Mongo>();
         _mongoDB.MongoDBConnection();
-
+        NodesList.Clear();
+        Vector3MinPostion.Clear();
+        Vector3MaxPostion.Clear();
         for (int i = 0; i < _mongoDB.LoadMongo("Node").Count; i++)
         {
             BsonDocument bson = _mongoDB.LoadMongo("Node")[i];
@@ -37,14 +44,13 @@ public class LandManager : MonoBehaviour
         // 재배 가능 영역 불러오기
         for (int i = 0; i < 8; i++)
         {
-            Vector3Int minPosition = new Vector3Int(-8 + (i * 4), -3, 0);
-            Vector3Int maxPosition = new Vector3Int(-6 + (i * 4), -1, 0);
+            Vector3Int minPosition = new(-8 + (i * 4), -3, 0);
+            Vector3Int maxPosition = new(-6 + (i * 4), -1, 0);
             Vector3MinPostion.Add(minPosition);
             Vector3MaxPostion.Add(maxPosition);
         }
-   
+
     }
-    
     private void Start()
     {
         LoadLand();
@@ -52,19 +58,23 @@ public class LandManager : MonoBehaviour
     }
     private void Update()
     {
-      // 이후 리팩토링 과정을 거쳐 업데이트문에서 삭제
-        if (Input.GetMouseButton(0))
+        // 이후 리팩토링 과정을 거쳐 업데이트문에서 삭제
+        if (OnNodePopUp)
         {
-            Vector3Int mousePos = GetMousePosition();
-            if (Vector3Node.ContainsKey(mousePos)&&OnNodePopUp)
+            if (Input.GetMouseButton(0))
             {
-                LandSeq = Vector3Node[mousePos];
-                _nodePopUp.SetActive(true);
-                OnNodePopUp = false;
+                Vector3Int mousePos = GetMousePosition();
+                if (Vector3Node.ContainsKey(mousePos))
+                {
+                    LandSeq = Vector3Node[mousePos];
+                    _nodePopUp.SetActive(true);
+                    OnNodePopUp = false;
+
+                }
 
             }
-
         }
+       
     }
     public Vector3Int GetMousePosition()
     {
@@ -73,9 +83,11 @@ public class LandManager : MonoBehaviour
     }
     public void LoadLand()
     {
+        NodeList.Clear();
+        Vector3Node.Clear();
         for (int currentland = 0; currentland < NodesList.Count; currentland++)
         {
-            coordinate(currentland);
+            Coordinate(currentland);
         }
     }
     public void SaveLand()
@@ -87,9 +99,11 @@ public class LandManager : MonoBehaviour
         }
 
     }
-    private void coordinate(int land)
+    private void Coordinate(int land)
     {
-        Vector3Int minPosition = Vector3MinPostion[land]; // 특정 영역의 최소 좌표
+     
+        
+       Vector3Int minPosition = Vector3MinPostion[land]; // 특정 영역의 최소 좌표
         Vector3Int maxPosition = Vector3MaxPostion[land]; // 특정 영역의 최대 좌표
         List<Vector3Int> vector3s = new List<Vector3Int>();
         for (int x = minPosition.x; x <= maxPosition.x; x++)
@@ -142,11 +156,6 @@ public class LandManager : MonoBehaviour
         string formattedTime = $"{(int)timeSpan.TotalHours}:{timeSpan.Minutes}:{timeSpan.Seconds}";
         return formattedTime;
     }
-    public void LeveUPChangeLandTile(int LandLevel)
-    {
-        coordinate(LandLevel - 1);
-        string query = "INSERT INTO LAND ( USER_SEQ )VALUES('" + UserInfo.UserSeq + "')";
-        Maria.OnInsertOrUpdateRequest(query);
-    }
+   
 
 }
