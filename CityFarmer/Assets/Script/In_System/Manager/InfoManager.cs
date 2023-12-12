@@ -12,13 +12,15 @@ public class InfoManager : MonoBehaviour
 {
     public UserInfo UserInfo;
     public Money Money;
-
+    public Water Water;
     public List<Shop> Shops = new List<Shop>();
     public List<Item> Items = new List<Item>();
     public List<Food> Foods = new List<Food>();
     public string MoneyUpdateQuery = "";
     public string MoneyInsertQuery = "";
     public string UserUpdateQuery = "";
+    public string WaterUpdateQuery = "";
+    public string WaterInsertQuery = "";
     private static InfoManager _instance;
     // 인스턴스에 접근하기 위한 프로퍼티
     public static InfoManager Instance
@@ -58,16 +60,27 @@ public class InfoManager : MonoBehaviour
         // 아래의 함수를 사용하여 씬이 전환되더라도 선언되었던 인스턴스가 파괴되지 않는다.
         DontDestroyOnLoad(gameObject);
     }
-    public string MoneyUpdateString()
-    {
-        MoneyUpdateQuery = "UPDATE MONEY SET MONEY_GOLD = '" + Money.moneyGold + "', MONEY_RUBY = '" + Money.moneyRuby + "' WHERE USER_SEQ = '" + UserInfo.UserSeq + "';";
-        return MoneyUpdateQuery;
-    }
     public string MoneyInsertString()
     {
         MoneyInsertQuery = "INSERT INTO MONEY ( USER_SEQ, MONEY_GOLD,MONEY_RUBY )VALUES('" + UserInfo.UserSeq + "',0,0)";
         return MoneyInsertQuery;
     }
+    public string MoneyUpdateString()
+    {
+        MoneyUpdateQuery = "UPDATE MONEY SET MONEY_GOLD = '" + Money.moneyGold + "', MONEY_RUBY = '" + Money.moneyRuby + "' WHERE USER_SEQ = '" + UserInfo.UserSeq + "';";
+        return MoneyUpdateQuery;
+    }
+    public string WaterInsertString()
+    {
+        WaterInsertQuery = "INSERT INTO WATER ( USER_SEQ, CURRENT_WATER,MAX_WATER )VALUES('" + UserInfo.UserSeq + "',0,300)";
+        return WaterInsertQuery;
+    }
+    public string WaterUpdateString()
+    {
+        WaterUpdateQuery = "UPDATE WATER SET CURRENT_WATER = '" + Water.CurrentWater + "', MAX_WATER = '" + Water.MaxWater + "' WHERE USER_SEQ = '" + UserInfo.UserSeq + "';";
+        return WaterUpdateQuery;
+    }
+   
     public string UserUpdateString()
     {
         UserUpdateQuery = "UPDATE USER SET USER_LANDLEVEL = '" + UserInfo.UserLandLevel + "', USER_LEVEL = '" + UserInfo.UserLevel + "', USER_EXP = '" + UserInfo.UserExp + "' WHERE USER_SEQ ='" + UserInfo.UserSeq + "';";
@@ -216,6 +229,27 @@ public class InfoManager : MonoBehaviour
                     case "Meat": food.foodtype = Food.Foodtype.Meat; break;
                 }
                 Foods.Add(food);
+            }
+        }
+        Maria.SqlConnection.Close();
+    }
+    public void LoadWater()
+    {
+        StartSQL();
+        string query = "SELECT * FROM WATER WHERE USER_SEQ = '" + UserInfo.UserSeq + "'";
+        DataSet dataSet = Maria.OnSelectRequest(query, "WATER");
+        XmlDocument xmlDocument = new XmlDocument();
+        xmlDocument.LoadXml(dataSet.GetXml());
+        if (xmlDocument != null)
+        {
+            XmlNodeList data = xmlDocument.SelectNodes("NewDataSet/WATER");
+
+
+            foreach (XmlNode node in data)
+            {
+                Water.MaxWater = System.Convert.ToInt32(node.SelectSingleNode("MAX_WATER").InnerText);
+                Water.CurrentWater = System.Convert.ToInt32(node.SelectSingleNode("CURRENT_WATER").InnerText);
+                Water.LastDateWater = System.Convert.ToDateTime(node.SelectSingleNode("LASTDATE_WATER").InnerText);
             }
         }
         Maria.SqlConnection.Close();

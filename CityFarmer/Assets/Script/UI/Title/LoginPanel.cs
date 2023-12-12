@@ -63,6 +63,7 @@ public class LoginPanel : MonoBehaviour
             InfoManager.Instance.LoadItem();
             InfoManager.Instance.LoadMoney();
             InfoManager.Instance.LoadShop();
+            InfoManager.Instance.LoadWater();
             gameObject.SetActive(false);
         }
     }
@@ -74,6 +75,7 @@ public class LoginPanel : MonoBehaviour
             InfoManager.Instance.LoadItem();
             InfoManager.Instance.LoadMoney();
             InfoManager.Instance.LoadShop();
+            InfoManager.Instance.LoadWater();
             gameObject.SetActive(false);
         }
 
@@ -84,6 +86,7 @@ public class LoginPanel : MonoBehaviour
     {
         InfoManager.Instance.SignUp(IdInputField.text, PassWordInputField.text,NameInputField.text);
         InfoManager.Instance.InsertSQL(InfoManager.Instance.MoneyInsertQuery);
+        InfoManager.Instance.InsertSQL(InfoManager.Instance.WaterInsertQuery);
         Login();
     }
 }

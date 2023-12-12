@@ -4,7 +4,7 @@ public class ShopManager : MonoBehaviour
 {
 
     private InventoryManager _inventory;
-    public LandManager Land;
+    public LandManager LandManager;
     private Money_UI _money_UI;
 
     private void Awake()
@@ -14,11 +14,11 @@ public class ShopManager : MonoBehaviour
     }
     private void OnEnable()
     {
-        Land.OnNodePopUp = false;
+        LandManager.OnNodePopUp = false;
     }
     private void OnDisable()
     {
-        Land.OnNodePopUp = true;
+        LandManager.OnNodePopUp = true;
     }
     public void ClickBuyButton(int shopSeq)
     {
@@ -124,8 +124,8 @@ public class ShopManager : MonoBehaviour
         Mongo.InitMongoNodes();
         InfoManager.Instance.UpdateSQL(InfoManager.Instance.MoneyUpdateString());
         InfoManager.Instance.UpdateSQL(InfoManager.Instance.UserUpdateString());
-        Land.Init();
-        Land.LoadLand();
+        LandManager.Init();
+        LandManager.LoadLand();
     }
     public void UseMoney(Shop shop)
     {

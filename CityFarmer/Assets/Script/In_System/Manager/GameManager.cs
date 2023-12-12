@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public static SoundManager SoundManager { get{ Init();  return _soundManager; } }
     public static InventoryManager InventoryManager { get { Init(); return _inventoryManager; } }
 
+    private float _gameTime = 0.0f;
 
     private static void Init()
     {
@@ -56,5 +57,14 @@ public class GameManager : MonoBehaviour
             component = go.AddComponent<T>();
         }
         return component;
+    }
+    private void Update()
+    {
+        _gameTime += Time.deltaTime;
+        if(_gameTime >= 3.0f)
+        {
+            InfoManager.Instance.UpdateSQL(InfoManager.Instance.WaterUpdateString());
+            _gameTime = 0.0f;
+        }
     }
 }

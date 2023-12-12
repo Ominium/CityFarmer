@@ -110,7 +110,7 @@ public class Mongo : MonoBehaviour
     }
     public static void UpdateMongoNodes(Nodes node)
     {
-        Debug.Log(node.Lands[3][0]);
+       
         IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>("Node");
         var builder = Builders<BsonDocument>.Filter;
         var filter = builder.Eq("UserSeq", UserInfo.UserSeq) & builder.Eq("LandSeq", node.LandSeq);

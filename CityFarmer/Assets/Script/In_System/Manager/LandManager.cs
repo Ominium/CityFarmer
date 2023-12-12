@@ -87,7 +87,7 @@ public class LandManager : MonoBehaviour
         Vector3Node.Clear();
         for (int currentland = 0; currentland < NodesList.Count; currentland++)
         {
-            coordinate(currentland);
+            Coordinate(currentland);
         }
     }
     public void SaveLand()
@@ -99,7 +99,7 @@ public class LandManager : MonoBehaviour
         }
 
     }
-    private void coordinate(int land)
+    private void Coordinate(int land)
     {
      
         
