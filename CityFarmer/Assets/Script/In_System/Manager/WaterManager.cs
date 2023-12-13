@@ -13,18 +13,14 @@ public class WaterManager : MonoBehaviour
         _water = InfoManager.Instance.Water;
     }
 
-    private void OnApplicationFocus(bool pause)
+    private void OnApplicationFocus(bool focus)
     {
       
-        if (!pause)
+        if (focus)
         {
-            PlayerPrefs.SetString("LastTime", Convert.ToString(DateTime.Now));
-        }
-        if (pause)
-        {
-            DateTime lastTime = Convert.ToDateTime(PlayerPrefs.GetString("LastTime"));
+            DateTime lastTime = InfoManager.Instance.Water.LastDateWater;
             _timeSpan = DateTime.Now - lastTime;
-            if((int)_timeSpan.TotalSeconds + _water.CurrentWater < _water.MaxWater)
+            if ((int)_timeSpan.TotalSeconds + _water.CurrentWater < _water.MaxWater)
             {
                 _water.CurrentWater += (int)_timeSpan.TotalSeconds;
             }
@@ -32,12 +28,14 @@ public class WaterManager : MonoBehaviour
             {
                 _water.CurrentWater = _water.MaxWater;
             }
-            
         }
+        InfoManager.Instance.Water.LastDateWater = DateTime.Now;
+        InfoManager.Instance.UpdateSQL(InfoManager.Instance.WaterUpdateString());
     }
     private void OnApplicationQuit()
     {
-        PlayerPrefs.SetString("LastTime", Convert.ToString(DateTime.Now));
+        InfoManager.Instance.Water.LastDateWater = DateTime.Now;
+        InfoManager.Instance.UpdateSQL(InfoManager.Instance.WaterUpdateString());
     }
     private void Update()
     {

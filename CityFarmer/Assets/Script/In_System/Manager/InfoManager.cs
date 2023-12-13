@@ -77,7 +77,7 @@ public class InfoManager : MonoBehaviour
     }
     public string WaterUpdateString()
     {
-        WaterUpdateQuery = "UPDATE WATER SET CURRENT_WATER = '" + Water.CurrentWater + "', MAX_WATER = '" + Water.MaxWater + "' WHERE USER_SEQ = '" + UserInfo.UserSeq + "';";
+        WaterUpdateQuery = "UPDATE WATER SET CURRENT_WATER = '" + Water.CurrentWater + "', MAX_WATER = '" + Water.MaxWater + "', LASTDATE_WATER = '"+ Water.LastDateWater.ToString("yyyy-MM-dd HH:mm:ss") + "' WHERE USER_SEQ = '" + UserInfo.UserSeq + "';";
         return WaterUpdateQuery;
     }
    
@@ -252,6 +252,7 @@ public class InfoManager : MonoBehaviour
                 Water.LastDateWater = System.Convert.ToDateTime(node.SelectSingleNode("LASTDATE_WATER").InnerText);
             }
         }
+       
         Maria.SqlConnection.Close();
     }
 

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Node_UI : MonoBehaviour
 {
 
-    public LandManager LandManager;
+    public  LandManager LandManager;
     private List<Transform> _transforms;
     private float[] _deltaTime = new float[9];
 

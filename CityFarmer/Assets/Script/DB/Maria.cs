@@ -7,10 +7,10 @@ public class Maria
 {
     public static MySqlConnection SqlConnection;
 
-    static string _ipAddress = "13.124.59.40";
-    static string _dbId = "root";
-    static string _dbPw = "dnflskfk1";
-    static string _dbName = "unityDB";
+    static readonly string _ipAddress = "13.124.59.40";
+    static readonly string _dbId = "root";
+    static readonly string _dbPw = "dnflskfk1";
+    static readonly string _dbName = "unityDB";
 
     public static string strConnection = string.Format("server={0};uid={1};pwd={2};database={3};charset=utf8 ;", _ipAddress, _dbId, _dbPw, _dbName);
   
